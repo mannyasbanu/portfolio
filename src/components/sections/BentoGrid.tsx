@@ -10,8 +10,6 @@ const cardVariants = {
   hover: { scale: 1.02, transition: { duration: 0.3, mass: 2, damping: 100 } },
 };
 
-const springConfig = { stiffness: 50, damping: 100, mass: 2 };
-
 type ProjectCardProps = {
   category: string;
   title: string;
@@ -27,7 +25,6 @@ type ProjectCardProps = {
   mediaLabel?: string;
   ctaHref?: string;
   ctaLabel?: string;
-  surfaceClassName?: string;
 };
 
 function ProjectCard({
@@ -45,7 +42,6 @@ function ProjectCard({
   mediaLabel = "Gameplay Demo",
   ctaHref,
   ctaLabel = "View Project",
-  surfaceClassName = "bg-[#F9F8F4]",
 }: ProjectCardProps) {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [canHoverPreview, setCanHoverPreview] = useState(false);
@@ -96,8 +92,7 @@ function ProjectCard({
       whileHover="hover"
       onHoverStart={startPreview}
       onHoverEnd={stopPreview}
-      className={`${className} ${surfaceClassName} rounded-lg border border-[#E2E2E2] overflow-hidden relative`}
-      style={springConfig}
+      className={`${className} bg-[#FCFBF8] rounded-lg border border-[#E6E1D8] overflow-hidden relative`}
     >
       <div className="absolute inset-0 flex items-center justify-center">
         <div className="h-full w-full bg-gradient-to-br from-[#E8D3D1]/20 to-[#D3D3D3]/20" />
@@ -250,8 +245,7 @@ function ExpandableResearchCard() {
       whileHover="hover"
       onHoverStart={expandCard}
       onHoverEnd={collapseCard}
-      className="md:col-span-2 lg:col-span-5 bg-[#F9F8F4] rounded-lg border border-[#E2E2E2] p-6 relative overflow-hidden min-h-[540px]"
-      style={springConfig}
+      className="md:col-span-2 lg:col-span-5 bg-[#FCFBF8] rounded-lg border border-[#E6E1D8] p-6 relative overflow-hidden min-h-[540px]"
       onClick={toggleCard}
       onKeyDown={handleKeyDown}
       tabIndex={0}

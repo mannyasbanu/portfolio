@@ -4,7 +4,7 @@ import { motion, useMotionValue, useTransform, useSpring } from "framer-motion";
 import { useEffect, useState } from "react";
 
 export function Hero() {
-  const [mounted, setMounted] = useState(false);
+  const [viewport, setViewport] = useState({ width: 1440, height: 900 });
 
   // Mouse position motion values
   const mouseX = useMotionValue(0);
@@ -14,12 +14,12 @@ export function Hero() {
   const springConfig = { damping: 100, stiffness: 50, mass: 2 };
 
   // Parallax transforms with different depths for each shape
-  const circleX = useTransform(mouseX, [0, window.innerWidth], [0, 80], { clamp: false });
-  const circleY = useTransform(mouseY, [0, window.innerHeight], [0, 60], { clamp: false });
-  const squareX = useTransform(mouseX, [0, window.innerWidth], [0, -60], { clamp: false });
-  const squareY = useTransform(mouseY, [0, window.innerHeight], [0, -50], { clamp: false });
-  const triangleX = useTransform(mouseX, [0, window.innerWidth], [0, 40], { clamp: false });
-  const triangleY = useTransform(mouseY, [0, window.innerHeight], [0, -40], { clamp: false });
+  const circleX = useTransform(mouseX, [0, viewport.width], [0, 80], { clamp: false });
+  const circleY = useTransform(mouseY, [0, viewport.height], [0, 60], { clamp: false });
+  const squareX = useTransform(mouseX, [0, viewport.width], [0, -60], { clamp: false });
+  const squareY = useTransform(mouseY, [0, viewport.height], [0, -50], { clamp: false });
+  const triangleX = useTransform(mouseX, [0, viewport.width], [0, 40], { clamp: false });
+  const triangleY = useTransform(mouseY, [0, viewport.height], [0, -40], { clamp: false });
 
   // Apply spring physics for damping
   const circleSpringX = useSpring(circleX, springConfig);
@@ -30,31 +30,26 @@ export function Hero() {
   const triangleSpringY = useSpring(triangleY, springConfig);
 
   useEffect(() => {
-    setMounted(true);
+    const updateViewport = () => {
+      setViewport({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
 
     const handleMouseMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
 
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
     window.addEventListener("mousemove", handleMouseMove);
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("resize", updateViewport);
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
   }, [mouseX, mouseY]);
-
-  if (!mounted) {
-    return (
-      <section className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden bg-[#F9F8F4]">
-        <div className="text-center max-w-2xl">
-          <h1 className="text-5xl md:text-6xl font-bold text-[#2C2C2C] font-sans mb-4">
-            Manny Asbanu
-          </h1>
-          <p className="text-lg md:text-xl text-[#2C2C2C]/70 leading-relaxed">
-            Computer scientist who enjoys solving hard problems, writing efficient code, and constantly pushing my limits.
-          </p>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="min-h-screen flex items-center justify-center px-6 relative overflow-hidden bg-[#F9F8F4]">
